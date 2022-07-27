@@ -31,7 +31,7 @@
           <div class="row">
             <div class="col-sm-6 mb-3">
               <label for="input-days" class="form-label">Days</label>
-              <input name="days" type="number" min="1" class="form-control" id="input-days" aria-describedby="days-help" required value="63" onchange="handleFormActivity();">
+              <input name="days" type="number" min="1" class="form-control" id="input-days" aria-describedby="days-help" required onchange="handleFormActivity();">
               <div id="days-help" class="form-text">The amount of days that your bill covers.</div>
             </div>
           </div>
@@ -40,12 +40,12 @@
           <div class="row g-3">
             <div class="col-sm-6 mb-3">
               <label for="day-usage" class="form-label">Day Units</label>
-              <input name="dayunits" type="number" min="0" class="form-control" id="day-usage" aria-describedby="day-usage-help" required value="566" onchange="handleFormActivity();">
+              <input name="dayunits" type="number" min="0" class="form-control" id="day-usage" aria-describedby="day-usage-help" required onchange="handleFormActivity();">
               <div id="day-usage-help" class="form-text">Units of electricity used for the given period.</div>
             </div>
             <div class="col-sm-6 mb-3">
               <label for="day-usage" class="form-label">Night Units</label>
-              <input name="nightunits" type="number" min="0" class="form-control" id="day-usage" aria-describedby="night-usage-help" value="259" onchange="handleFormActivity();">
+              <input name="nightunits" type="number" min="0" class="form-control" id="day-usage" aria-describedby="night-usage-help" onchange="handleFormActivity();">
               <div id="night-usage-help" class="form-text">Leave blank if you have no night meter.</div>
             </div>
           </div>
@@ -64,7 +64,7 @@
 
           <!-- Electricity Allowance -->
           <div class="form-check mb-3">
-            <input name="freeallowance" class="form-check-input" type="checkbox" id="checkbox-allowance" onclick="handleFormActivity();" checked>
+            <input name="freeallowance" class="form-check-input" type="checkbox" id="checkbox-allowance" onclick="handleFormActivity();">
             <label class="form-check-label" for="checkbox-allowance">Free Electricity Allowance</label>
           </div>
 
@@ -106,43 +106,7 @@
     const ELECTRICPROVIDERS = [
       {
         details: {
-          name: "Electric Ireland Old Price",
-          startingDiscount: 0.30,
-          standardDiscount: 0.055,
-          url: "https://www.electricireland.ie/switch/new-customer/price-plans?priceType=E",
-        },
-        plans: [
-          {
-            region: "urban",
-            meter: "day",
-            standingCharge: 272.05,
-            dayRate: 0.2812,
-          },
-          {
-            region: "rural",
-            meter: "day",
-            standingCharge: 341.72,
-            dayRate: 0.2812,
-          },
-          {
-            region: "urban",
-            meter: "night",
-            standingCharge: 356.47,
-            dayRate: 0.3004,
-            nightRate: 0.1482,
-          },
-          {
-            region: "rural",
-            meter: "night",
-            standingCharge: 434.41,
-            dayRate: 0.3004,
-            nightRate: 0.1482,
-          }
-        ]
-      },
-      {
-        details: {
-          name: "Electric Ireland New Price",
+          name: "Electric Ireland",
           startingDiscount: 0.30,
           standardDiscount: 0.055,
           url: "https://www.electricireland.ie/switch/new-customer/price-plans?priceType=E",
@@ -576,42 +540,6 @@
           }
         ]
       },
-      {
-        details: {
-          name: "WaterPower",
-          startingDiscount: 0.05,
-          standardDiscount: 0.05,
-          url: "https://www.waterpower.ie/current-electricity-rates/",
-        },
-        plans: [
-          {
-            region: "urban",
-            meter: "day",
-            standingCharge: 264.76,
-            dayRate: 0.3706
-          },
-          {
-            region: "rural",
-            meter: "day",
-            standingCharge: 386.14,
-            dayRate: 0.3706
-          },
-          {
-            region: "urban",
-            meter: "night",
-            standingCharge: 264.76,
-            dayRate: 0.3815,
-            nightRate: 0.2310
-          },
-          {
-            region: "rural",
-            meter: "night",
-            standingCharge: 386.14,
-            dayRate: 0.3815,
-            nightRate: 0.2310
-          }
-        ]
-      }
     ];
   </script>
   <!-- Class methods -->
@@ -677,18 +605,22 @@
         return cost;
       }
 
+      // currency() {
+      //   return function (text, render) {
+      //     return render(text);
+      //   }
+      // }
+
       get yearOneCost() {
-        let cost = this.calcFinalCost(this.startingDiscount);
-        return euroIELocale.format(cost);
+        return this.calcFinalCost(this.startingDiscount);
       }
 
       get yearOneTitle() {
-        return "Discount " + (this.startingDiscount * 100) + "%"
+        return "Discount " + (this.startingDiscount * 100) + "%";
       }
 
       get yearTwoCost() {
-        let cost = this.calcFinalCost(this.standardDiscount);
-        return euroIELocale.format(cost);
+        return this.calcFinalCost(this.standardDiscount);
       }
 
       get yearTwoTitle() {
@@ -706,6 +638,12 @@
       get currentCost() {
         let cost = this.calcFinalCost(this.currentDiscount);
         return euroIELocale.format(cost);
+      }
+    }
+
+    function renderCurrency() {
+      return function (text, render) {
+        return euroIELocale.format(render(text));
       }
     }
 
@@ -735,8 +673,8 @@
           {{#providers}}
           <tr {{#isCurrent}}class="table-success"{{/isCurrent}}>
             <td data-bs-toggle="tooltip" data-bs-placement="left" title="{{nameTitle}}"><a href="{{url}}" target="_blank">{{name}}</a></td>
-            <td data-bs-toggle="tooltip" data-bs-placement="left" title="{{yearOneTitle}}">{{yearOneCost}}</td>
-            <td data-bs-toggle="tooltip" data-bs-placement="left" title="{{yearTwoTitle}}">{{yearTwoCost}}</td>
+            <td data-bs-toggle="tooltip" data-bs-placement="left" title="{{yearOneTitle}}">{{#currency}}{{yearOneCost}}{{/currency}}</td>
+            <td data-bs-toggle="tooltip" data-bs-placement="left" title="{{yearTwoTitle}}">{{#currency}}{{yearTwoCost}}{{/currency}}</td>
           </tr>
           {{/providers}}
         </tbody>
@@ -745,7 +683,7 @@
       // Sort provider array by sort key before rendering table
       providerArray.sort(function(a, b){return a[currentSortField] > b[currentSortField]});
       if (currentSortReverse) providerArray.reverse();
-      let rendered = Mustache.render(template, {providers: providerArray, current: currentProvider});
+      let rendered = Mustache.render(template, {providers: providerArray, current: currentProvider, currency: renderCurrency});
       document.getElementById("data-table").innerHTML = rendered;
       refreshTooltip()
 
