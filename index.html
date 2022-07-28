@@ -605,30 +605,24 @@
         return cost;
       }
 
-      // currency() {
-      //   return function (text, render) {
-      //     return render(text);
-      //   }
-      // }
-
       get yearOneCost() {
         return this.calcFinalCost(this.startingDiscount);
       }
 
-      get yearOneTitle() {
-        return "Discount " + (this.startingDiscount * 100) + "%";
+      get yearOneDiscount() {
+        return this.startingDiscount * 100;
       }
 
       get yearTwoCost() {
         return this.calcFinalCost(this.standardDiscount);
       }
 
-      get yearTwoTitle() {
-        return "Discount " + (this.standardDiscount * 100) + "%"
+      get yearTwoDiscount() {
+        return this.standardDiscount * 100
       }
 
-      get nameTitle() {
-        return "Service Charge: " + euroIELocale.format(this.calcBaseCosts());
+      get serviceCost() {
+        return this.calcBaseCosts();
       }
 
       get isCurrent() {
@@ -636,8 +630,7 @@
       }
 
       get currentCost() {
-        let cost = this.calcFinalCost(this.currentDiscount);
-        return euroIELocale.format(cost);
+        return this.calcFinalCost(this.currentDiscount);
       }
     }
 
@@ -655,7 +648,7 @@
         <caption>Current Provider</caption>
         <tr class="table-warning">
           <td>{{name}}</td>
-          <td>{{currentCost}}</td>
+          <td>{{#currency}}{{currentCost}}{{/currency}}</td>
         </tr>
       </table>
       {{/current}}
@@ -672,9 +665,9 @@
         <tbody class="table-group-divider">
           {{#providers}}
           <tr {{#isCurrent}}class="table-success"{{/isCurrent}}>
-            <td data-bs-toggle="tooltip" data-bs-placement="left" title="{{nameTitle}}"><a href="{{url}}" target="_blank">{{name}}</a></td>
-            <td data-bs-toggle="tooltip" data-bs-placement="left" title="{{yearOneTitle}}">{{#currency}}{{yearOneCost}}{{/currency}}</td>
-            <td data-bs-toggle="tooltip" data-bs-placement="left" title="{{yearTwoTitle}}">{{#currency}}{{yearTwoCost}}{{/currency}}</td>
+            <td data-bs-toggle="tooltip" data-bs-placement="left" title="Service Charge: {{#currency}}{{serviceCost}}{{/currency}}"><a href="{{url}}" target="_blank">{{name}}</a></td>
+            <td data-bs-toggle="tooltip" data-bs-placement="left" title="Discount {{yearOneDiscount}}%">{{#currency}}{{yearOneCost}}{{/currency}}</td>
+            <td data-bs-toggle="tooltip" data-bs-placement="left" title="Discount {{yearTwoDiscount}}%">{{#currency}}{{yearTwoCost}}{{/currency}}</td>
           </tr>
           {{/providers}}
         </tbody>
