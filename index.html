@@ -101,7 +101,7 @@
   <!-- Json Data -->
   <script>
     // All prices include vat unless otherwise stated
-    const PSO = 56.24;  // Price per year
+    const PSO = 0.0;  // Price per year
     const FREEUNITS = 1.150684932;  // Price per day
     const ELECTRICPROVIDERS = [
       {
@@ -137,6 +137,42 @@
             standingCharge: 483.71,
             dayRate: 0.3344,
             nightRate: 0.1650,
+          }
+        ]
+      },
+      {
+        details: {
+          name: "Electric Ireland Oct",
+          startingDiscount: 0.30,
+          standardDiscount: 0.055,
+          url: "https://www.electricireland.ie/switch/new-customer/price-plans?priceType=E",
+        },
+        plans: [
+          {
+            region: "urban",
+            meter: "day",
+            standingCharge: 302.92,
+            dayRate: 0.4327,
+          },
+          {
+            region: "rural",
+            meter: "day",
+            standingCharge: 380.46,
+            dayRate: 0.4327,
+          },
+          {
+            region: "urban",
+            meter: "night",
+            standingCharge: 396.89,
+            dayRate: 0.4623,
+            nightRate: 0.2280,
+          },
+          {
+            region: "rural",
+            meter: "night",
+            standingCharge: 483.71,
+            dayRate: 0.4623,
+            nightRate: 0.2280,
           }
         ]
       },
